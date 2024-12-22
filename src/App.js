@@ -9,7 +9,12 @@ import LogIn from "./components/LogIn";
 import SignUp from "./components/SignUp";
 import NotFound from "./components/NotFound";
 import Home from "./components/Home";
+import BrowseBooks from "./components/BrowseBooks";
+import MyBooks from "./components/MyBooks";
+import Posts from "./components/Posts";
+import MyPosts from "./components/MyPosts";
 
+// Query client
 const queryClient=new QueryClient();
 
 function App() {
@@ -22,7 +27,10 @@ function App() {
                 <Route path={'/SignUp'} element={<SignUp/>}/>
                 <Route path={'*'} element={<NotFound/>}/>
                 <Route path={'/Home'} element={<Home/>}>
-
+                    <Route path={'BrowseBooks'} element={<BrowseBooks/>}/>
+                    <Route path={'MyBooks'} element={<MyBooks/>}/>
+                    <Route path={'Posts'} element={<MyPosts/>}/>
+                    <Route path={'MyPosts'} element={<Posts/>}/>
                 </Route>
             </Routes>
         </div>

@@ -4,6 +4,8 @@ import {signInWithEmailAndPassword} from "firebase/auth";
 import {useRef} from "react";
 import {useNavigate} from "react-router-dom";
 
+export let email1="";
+
 const LogIn=()=>{
 
     const logINRef = useRef(null); // Reference to the form element
@@ -20,6 +22,7 @@ const LogIn=()=>{
         e.preventDefault();
 
         const email = logINRef.current.email.value; // Access email input via ref
+        email1=logINRef.current.email.value;
         const password = logINRef.current.password.value;
 
         signInWithEmailAndPassword(auth,email,password)

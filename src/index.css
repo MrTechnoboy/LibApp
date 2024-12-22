@@ -3,3 +3,8 @@
 @import "styles/SignUp.css";
 @import "styles/NotFound.css";
 @import "styles/ErrorBoundary.css";
+@import "styles/Home.css";
+@import "styles/BrowseBooks.css";
+@import "styles/MyBooks.css";
+@import "styles/Posts.css";
+@import "styles/MyPosts.css";
