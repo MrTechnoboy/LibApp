@@ -1,0 +1,112 @@
+#LogIn{
+  @mixin mobile{
+    @media (min-width: 320px){
+      @content;
+    };
+  };
+  @mixin tablet_small{
+    @media (min-width: 426px) {
+      @content;
+    };
+  };
+  @mixin tablet_large{
+    @media (min-width: 597px){
+      @content;
+    };
+  };
+  @mixin laptop_small{
+    @media (min-width: 769px) {
+      @content;
+    };
+  };
+  @mixin laptop_large{
+    @media (min-width: 1440px){
+      @content;
+    };
+  };
+  @mixin fourK_small{
+    @media (min-width: 2001px){
+      @content;
+    };
+  };
+  @mixin fourK_large {
+    @media (min-width: 2560px) {
+      @content;
+    };
+  };
+
+  @include mobile{
+    text-align: center;
+    display: grid;
+    place-items: center;
+    border: 5px solid saddlebrown;
+    border-radius: 20px;
+    font-family: Arial,sans-serif;
+    background-color: bisque;
+    input{
+      display: block;
+      padding: 10px;
+      border: 2px solid black;
+      border-radius: 10px;
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+    };
+    button{
+      padding: 10px;
+      border: 3px solid black;
+      border-radius: 10px;
+      font-weight: bolder;
+      cursor: pointer;
+      margin-bottom: 20px;
+      &:hover{
+        background-color: saddlebrown;
+        color: white;
+      };
+      &:active{
+        background-color: white;
+        color: black;
+      }
+    };
+  };
+  @include laptop_small{
+    border: 10px solid saddlebrown;
+    h1{
+      font-size: 80px;
+    };
+    h2{
+      font-size: 50px;
+    };
+    input{
+      font-size: 30px;
+    };
+    button{
+      font-size: 30px;
+    };
+  };
+  @include laptop_large{
+    h1{
+      font-size: 100px;
+    };
+    h2{
+      font-size: 70px;
+    };
+    input{
+      font-size: 60px;
+    };
+    button{
+      font-size: 40px;
+    };
+  };
+  @include fourK_small{
+    h1{
+      font-size: 130px;
+    };
+    h2{
+      font-size: 100px;
+    };
+    button{
+      font-size: 60px;
+    };
+  };
+};

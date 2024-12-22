@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+//import settings
+import {QueryClientProvider, QueryClient} from "react-query";
+import {ReactQueryDevtools} from "react-query/devtools";
+import {Routes, Route} from "react-router-dom";
+
+//import components
+import P1 from "./components/P1";
+import LogIn from "./components/LogIn";
+import SignUp from "./components/SignUp";
+import NotFound from "./components/NotFound";
+import Home from "./components/Home";
+
+const queryClient=new QueryClient();
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <QueryClientProvider client={queryClient}>
+        <div className="App">
+            <Routes>
+                <Route path={'/'} element={<P1/>}/>
+                <Route path={'/LogIn'} element={<LogIn/>}/>
+                <Route path={'/SignUp'} element={<SignUp/>}/>
+                <Route path={'*'} element={<NotFound/>}/>
+                <Route path={'/Home'} element={<Home/>}>
+
+                </Route>
+            </Routes>
+        </div>
+        <ReactQueryDevtools initialIsOpen={false} position={"bottom-right"}/>
+      </QueryClientProvider>
   );
 }
 
