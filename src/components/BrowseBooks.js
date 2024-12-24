@@ -6,6 +6,6 @@ const BrowseBooks = () => {
             Browse Books
         </div>
     );
-}
+};
 
 export default BrowseBooks;

@@ -1,32 +1,75 @@
 #Home{
-  @mixin mobile{
-    @media (min-width: 320px){
-      @content;
+  #Home-header {
+    @mixin mobile {
+      @media (min-width: 320px) {
+        @content;
+      };
     };
-  };
-  @mixin tablet_small{
-    @media (min-width: 426px) {
-      @content;
+    @mixin tablet_small {
+      @media (min-width: 426px) {
+        @content;
+      };
     };
-  };
-  @mixin tablet_large{
-    @media (min-width: 597px){
-      @content;
+    @mixin tablet_large {
+      @media (min-width: 597px) {
+        @content;
+      };
     };
-  };
-  @mixin laptop_small{
-    @media (min-width: 769px) {
-      @content;
+    @mixin laptop_small {
+      @media (min-width: 769px) {
+        @content;
+      };
     };
-  };
-  @mixin laptop_large{
-    @media (min-width: 1440px){
-      @content;
+    @mixin laptop_large {
+      @media (min-width: 1025px) {
+        @content;
+      };
     };
-  };
-  @mixin fourK_small{
-    @media (min-width: 2001px){
-      @content;
+    @mixin fourK {
+      @media (min-width: 1441px) {
+        @content;
+      };
+    };
+
+    @include mobile {
+      display: flex;
+      justify-content: space-evenly;
+      border: 3px solid black;
+      border-radius: 20px;
+      padding: 20px;
+      background-color: bisque;
+      a {
+        text-decoration: none;
+        color: black;
+        cursor: pointer;
+        border: 1px solid saddlebrown;
+        padding: 3px;
+        border-radius: 20px;
+        &:hover {
+          background-color: saddlebrown;
+          color: white;
+        };
+        &:active {
+          background-color: bisque;
+          border-color: saddlebrown;
+        };
+      };
+    };
+    @include tablet_large {
+      a {
+        font-size: 25px;
+        border-width: 3px;
+      };
+    };
+    @include laptop_large {
+      a {
+        font-size: 35px;
+      };
+    };
+    @include fourK {
+      a {
+        font-size: 85px;
+      };
     };
   };
 };
