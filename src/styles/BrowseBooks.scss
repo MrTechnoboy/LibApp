@@ -29,4 +29,114 @@
       @content;
     };
   };
+
+  @include mobile{
+    form{
+      text-align: center;
+      margin-top: 10px;
+      input{
+        height: 20px;
+        border: 2px solid black;
+        border-radius: 20px;
+        background-color: bisque;
+        text-align: center;
+      };
+    };
+    #booksList{
+      margin-top: 20px;
+      border: 5px solid #100d0d;
+      border-radius: 20px;
+      padding: 20px;
+      text-align: center;
+      button{
+        margin-top: 20px;
+        border-radius: 20px;
+        background-color: bisque;
+        border: 1px solid black;
+        cursor: pointer;
+        &:hover{
+          background-color: saddlebrown;
+          color: bisque;
+        };
+        &:active{
+          background-color: white;
+          color: black;
+        }
+      }
+      #Book{
+        display: flex;
+        flex-direction: column;
+        place-items: center;
+        div {
+          font-weight: bolder;
+          text-align: center;
+          margin-top: 20px;
+          border: 5px solid #100d0d;
+          border-radius: 20px;
+          padding: 20px;
+          background-color: bisque;
+          cursor: pointer;
+          a{
+            text-decoration: none;
+          }
+          &:hover{
+            background-color: saddlebrown;
+            color: bisque;
+            a{
+              color: bisque;
+            }
+          };
+        };
+      };
+    };
+  };
+  @include tablet_small{
+    form{
+      input{
+        height: 30px;
+      };
+    };
+  };
+  @include laptop_small{
+    form{
+      input{
+        font-size: 30px;
+        padding: 20px;
+        border: 3px solid black;
+      };
+    };
+    #booksList{
+      button{
+        font-size: 25px;
+        font-weight: bolder;
+      };
+      #Book{
+        div{
+          font-size: 30px;
+        };
+      };
+    };
+  };
+  @include laptop_large{
+    form{
+      margin-top: 30px;
+      input{
+        font-size: 60px;
+        height: 50px;
+      };
+    };
+    #booksList{
+      border: 6px solid black;
+      button{
+        font-size: 40px;
+      };
+      #Book{
+        div{
+          font-size: 50px;
+          border: 6px solid black;
+          margin-top: 30px;
+        };
+      };
+    };
+  };
 };

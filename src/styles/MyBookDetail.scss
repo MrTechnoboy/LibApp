@@ -1,0 +1,32 @@
+#MyBookDetail{
+  @mixin mobile {
+    @media (min-width: 320px) {
+      @content;
+    };
+  };
+  @mixin tablet_small {
+    @media (min-width: 426px) {
+      @content;
+    };
+  };
+  @mixin tablet_large {
+    @media (min-width: 597px) {
+      @content;
+    };
+  };
+  @mixin laptop_small {
+    @media (min-width: 769px) {
+      @content;
+    };
+  };
+  @mixin laptop_large {
+    @media (min-width: 1025px) {
+      @content;
+    };
+  };
+  @mixin fourK {
+    @media (min-width: 1441px) {
+      @content;
+    };
+  };
+};

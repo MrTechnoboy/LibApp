@@ -32,6 +32,7 @@
     };
 
     @include mobile {
+      margin-top: 10px;
       display: flex;
       justify-content: space-evenly;
       border: 3px solid black;

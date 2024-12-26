@@ -13,6 +13,11 @@ import BrowseBooks from "./components/BrowseBooks";
 import MyBooks from "./components/MyBooks";
 import Posts from "./components/Posts";
 import MyPosts from "./components/MyPosts";
+import BookDetail from "./components/BookDetail";
+import MyBookDetail from "./components/MyBookDetail";
+import PostDetail from "./components/PostDetail";
+import MyPostDetail from "./components/MyPostDetail";
+import CreatePost from "./components/CreatePost";
 
 // Query client
 const queryClient=new QueryClient();
@@ -31,6 +36,11 @@ function App() {
                     <Route path={'MyBooks'} element={<MyBooks/>}/>
                     <Route path={'Posts'} element={<MyPosts/>}/>
                     <Route path={'MyPosts'} element={<Posts/>}/>
+                    <Route path={'BookDetail'} element={<BookDetail/>}/>
+                    <Route path={'MyBookDetail'} element={<MyBookDetail/>}/>
+                    <Route path={'PostDetail'} element={<PostDetail/>}/>
+                    <Route path={'MyPostDetail'} element={<MyPostDetail/>}/>
+                    <Route path={'CreatePost'} element={<CreatePost/>}/>
                 </Route>
             </Routes>
         </div>
