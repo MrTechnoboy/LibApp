@@ -1,3 +1,4 @@
+// Imports
 import React from "react";
 import {auth} from "./firebaseConfig";
 import {signInWithEmailAndPassword} from "firebase/auth";

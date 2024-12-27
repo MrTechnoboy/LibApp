@@ -29,4 +29,98 @@
       @content;
     };
   };
+  @include mobile{
+    margin-top: 20px;
+    text-align: center;
+    border: 3px solid black;
+    border-radius: 20px;
+    background-color: bisque;
+    font-family: "Book Antiqua", serif;
+    img{
+      border: 3px solid saddlebrown;
+    };
+    button{
+      display: block;
+      margin: 0 auto 10px;
+      font-weight: bolder;
+      border: 2px solid saddlebrown;
+      background-color: bisque;
+      border-radius: 20px;
+      cursor: pointer;
+      padding: 10px;
+      &:hover{
+        background-color: saddlebrown;
+        color: bisque;
+      }
+      &:active{
+        background-color: bisque;
+        color: #1f1d1d;
+      };
+    };
+  };
+  @include tablet_large{
+    h1{
+      font-size: 40px;
+    };
+    img{
+      width: 25%;
+    };
+    h2{
+      font-size: 30px;
+    };
+    h3{
+      font-size: 20px;
+    };
+  };
+  @include laptop_small{
+    h1{
+      font-size: 50px;
+    };
+    img{
+      width: 35%;
+    };
+    h2{
+      font-size: 40px;
+    };
+    h3{
+      font-size: 30px;
+    };
+    p{
+      font-size: 20px;
+    };
+    button{
+      font-size: 20px;
+    };
+  };
+  @include laptop_large{
+    h1{
+      font-size: 60px;
+    };
+    img{
+      width: 35%;
+    };
+    h2{
+      font-size: 50px;
+    };
+  };
+  @include fourK{
+    h1{
+      font-size: 80px;
+    };
+    h2{
+      font-size: 70px;
+    }
+    h3{
+      font-size: 60px;
+    };
+    p{
+      font-size: 50px;
+    };
+    button{
+      font-size: 40px;
+    };
+    img{
+      width: 35%;
+    };
+  };
 };

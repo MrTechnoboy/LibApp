@@ -8,3 +8,8 @@
 @import "styles/MyBooks.css";
 @import "styles/Posts.css";
 @import "styles/MyPosts.css";
+@import "styles/BookDetail.css";
+@import "styles/MyBookDetail.css";
+@import "styles/PostDetail.css";
+@import "styles/MyPostDetail.css";
+@import "styles/CreatePost.css";

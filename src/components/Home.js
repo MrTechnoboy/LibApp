@@ -1,3 +1,4 @@
+// imports
 import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Link, Outlet} from "react-router-dom";
@@ -23,7 +24,7 @@ const Home = () => {
     },[]);
 
 
-
+    // Log Out function
     const LogOut=()=>{
         signOut(auth)
             .then(()=>{
