@@ -9,20 +9,6 @@ const Home = () => {
 
     const navigate=useNavigate();
 
-    const [emailL,setEmail]=useState('');
-    const [emailS,setEmailS]=useState('');
-
-    useEffect(()=>{
-        const emailL=localStorage.getItem('emailL');
-        const emailS=localStorage.getItem('emailS');
-        if(emailS){
-            setEmailS(emailS);
-        }
-        if(emailL){
-            setEmail(emailL);
-        }
-    },[]);
-
 
     // Log Out function
     const LogOut=()=>{
