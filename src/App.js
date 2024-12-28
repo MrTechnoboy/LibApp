@@ -34,8 +34,8 @@ function App() {
                 <Route path={'/Home'} element={<Home/>}>
                     <Route path={'BrowseBooks'} element={<BrowseBooks/>}/>
                     <Route path={'MyBooks'} element={<MyBooks/>}/>
-                    <Route path={'Posts'} element={<MyPosts/>}/>
-                    <Route path={'MyPosts'} element={<Posts/>}/>
+                    <Route path={'Posts'} element={<Posts/>}/>
+                    <Route path={'MyPosts'} element={<MyPosts/>}/>
                     <Route path={'BookDetail'} element={<BookDetail/>}/>
                     <Route path={'MyBookDetail'} element={<MyBookDetail/>}/>
                     <Route path={'PostDetail'} element={<PostDetail/>}/>

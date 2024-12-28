@@ -1,5 +1,4 @@
 // imports
-import React, {useEffect, useState} from 'react';
 import {useNavigate} from "react-router-dom";
 import {Link, Outlet} from "react-router-dom";
 import {auth} from "./firebaseConfig";
