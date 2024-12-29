@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { getDocs, getFirestore, collection } from 'firebase/firestore';
-
-// Initialize Firestore
-const db = getFirestore();
+import { getDocs, collection } from 'firebase/firestore';
+import {db} from "./firebaseConfig";
 
 const Posts = () => {
     const [postsData, setPostsData] = useState([]);
