@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { doc, getDocs, getFirestore, collection } from 'firebase/firestore';
+import { getDocs, getFirestore, collection } from 'firebase/firestore';
 
 // Initialize Firestore
 const db = getFirestore();
@@ -25,6 +25,11 @@ const Posts = () => {
                     const postsSnapshot = await getDocs(postsSubcollection);
 
                     postsSnapshot.forEach(postDoc => {
+                        // Filter out the "examplePost" document
+                        if (postDoc.id === "examplePost") {
+                            return; // Skip this document
+                        }
+
                         const postData = postDoc.data();
 
                         // Convert Firestore timestamp to readable format
