@@ -1,28 +1,21 @@
-import React, { useEffect, useState, useRef, useCallback } from 'react';
-import { getDocs, collectionGroup, query, orderBy, limit, startAfter } from 'firebase/firestore';
-import { db } from './firebaseConfig';
-
-// Helper function to format timestamps
-const formatTimestamp = (timestamp, locale = "en-US") => {
-    if (!timestamp) return "N/A";
-    return new Date(timestamp.seconds * 1000 + timestamp.nanoseconds / 1000000).toLocaleString(locale);
-};
+import React, { useEffect, useState, useRef, useCallback } from "react";
+import { getDocs, collectionGroup, query, orderBy, limit, startAfter, getDoc } from "firebase/firestore";
+import { db } from "./firebaseConfig";
 
 const Posts = () => {
-    const [postsData, setPostsData] = useState([]); // Stores the list of posts
-    const [loading, setLoading] = useState(false); // Tracks if data is being fetched
-    const [hasMore, setHasMore] = useState(true); // Determines if there are more posts to load
-    const [error, setError] = useState(null); // Stores fetch error messages if any
+    const [postsData, setPostsData] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [hasMore, setHasMore] = useState(true);
+    const [error, setError] = useState(null);
 
-    const lastVisiblePostRef = useRef(null); // Tracks the last document fetched for pagination
+    const lastVisiblePostRef = useRef(null);
 
     const fetchPosts = useCallback(async () => {
-        if (!hasMore) return; // Exit early if no more posts are available
-        setLoading(true); // Start the loading indicator
-        setError(null); // Clear any previous error
+        if (!hasMore) return;
+        setLoading(true);
+        setError(null);
 
         try {
-            // Construct the query, adding `startAfter` if there's a last visible document
             const postsQuery = lastVisiblePostRef.current
                 ? query(
                     collectionGroup(db, "posts"),
@@ -39,47 +32,59 @@ const Posts = () => {
             const querySnapshot = await getDocs(postsQuery);
 
             if (querySnapshot.empty) {
-                setHasMore(false); // No more posts to fetch
+                setHasMore(false);
                 return;
             }
 
-            const fetchedPosts = querySnapshot.docs.map((postDoc) => {
-                const postData = postDoc.data();
-                return {
-                    postName: postDoc.id || "N/A", // Fallback for missing post names
-                    text: postData.text || "No text available", // Fallback for missing text
-                    timestamp: postData.timestamp || null, // Preserve null timestamps
-                    username: postData.username || "Unknown User", // Fallback for missing usernames
-                    email: postData.email || "No Email", // Fallback for missing emails
-                };
-            });
+            const fetchedPosts = await Promise.all(
+                querySnapshot.docs.map(async (postDoc) => {
+                    const postData = postDoc.data();
+                    const parentDocRef = postDoc.ref.parent.parent;
 
-            // Avoid adding duplicate posts based on `postName`
+                    let username = "Unknown User";
+                    let email = "No Email";
+
+                    if (parentDocRef) {
+                        const parentDocSnap = await getDoc(parentDocRef); // Fixed to use getDoc
+                        if (parentDocSnap.exists()) {
+                            const parentData = parentDocSnap.data();
+                            username = parentData.username || "Unknown User";
+                            email = parentData.em || "No Email";
+                        }
+                    }
+
+                    return {
+                        postName: postDoc.id || "N/A",
+                        text: postData.text || "No text available",
+                        timestamp: postData.timestamp || null,
+                        username,
+                        email,
+                    };
+                })
+            );
+
             setPostsData((prevState) => {
                 const existingNames = new Set(prevState.map((post) => post.postName));
                 const uniquePosts = fetchedPosts.filter((post) => !existingNames.has(post.postName));
                 return [...prevState, ...uniquePosts];
             });
 
-            // Update the lastVisiblePostRef to the last document in the query snapshot
             lastVisiblePostRef.current = querySnapshot.docs[querySnapshot.docs.length - 1];
         } catch (error) {
             console.error("Error fetching posts:", error);
-            setError("Failed to load posts. Please try again later."); // Improved user-friendly error message
+            setError("Failed to load posts. Please try again later.");
         } finally {
-            setLoading(false); // Stop the loading indicator
+            setLoading(false);
         }
     }, [hasMore]);
 
-    // Fetch initial posts on component mount
     useEffect(() => {
         fetchPosts();
     }, [fetchPosts]);
 
-    // Optional cleanup when the component unmounts
     useEffect(() => {
         return () => {
-            lastVisiblePostRef.current = null; // Clear the last visible post ref
+            lastVisiblePostRef.current = null;
         };
     }, []);
 
@@ -101,22 +106,12 @@ const Posts = () => {
             {postsData.length > 0 ? (
                 <ul>
                     {postsData.map((post, index) => (
-                        <li key={post.postName || index}> {/* Use `postName` as key for uniqueness */}
-                            <p>
-                                <strong>Post Name:</strong> {post.postName}
-                            </p>
-                            <p>
-                                <strong>Text:</strong> {post.text}
-                            </p>
-                            <p>
-                                <strong>Timestamp:</strong> {formatTimestamp(post.timestamp)}
-                            </p>
-                            <p>
-                                <strong>Username:</strong> {post.username}
-                            </p>
-                            <p>
-                                <strong>Email:</strong> {post.email}
-                            </p>
+                        <li key={post.postName || index}>
+                            <p><strong>Post Name:</strong> {post.postName}</p>
+                            <p><strong>Text:</strong> {post.text}</p>
+                            <p><strong>Timestamp:</strong> {post.timestamp?.toDate().toString() || "N/A"}</p>
+                            <p><strong>Username:</strong> {post.username}</p>
+                            <p><strong>Email:</strong> {post.email}</p>
                         </li>
                     ))}
                 </ul>
@@ -124,7 +119,6 @@ const Posts = () => {
                 !loading && !error && <p>No posts found.</p>
             )}
 
-            {/* Show loading indicator or "Load More" button */}
             {hasMore && !error && (
                 <button
                     onClick={fetchPosts}
@@ -136,10 +130,7 @@ const Posts = () => {
                 </button>
             )}
 
-            {/* Show a secondary loading indicator while fetching more posts */}
-            {loading && postsData.length > 0 && (
-                <p style={{ fontStyle: "italic" }}>Loading more posts...</p>
-            )}
+            {loading && postsData.length > 0 && <p style={{ fontStyle: "italic" }}>Loading more posts...</p>}
         </div>
     );
 };
