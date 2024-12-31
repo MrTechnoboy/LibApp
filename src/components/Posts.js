@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { getDocs, collectionGroup, query, orderBy, limit, startAfter, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
+import {Link} from "react-router-dom";
 
 const Posts = () => {
     const [postsData, setPostsData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState(null);
+    const [searchTerm, setSearchTerm] = useState(""); // To store the search input from the user
 
     const lastVisiblePostRef = useRef(null);
 
@@ -45,7 +47,7 @@ const Posts = () => {
                     let email = "No Email";
 
                     if (parentDocRef) {
-                        const parentDocSnap = await getDoc(parentDocRef); // Fixed to use getDoc
+                        const parentDocSnap = await getDoc(parentDocRef);
                         if (parentDocSnap.exists()) {
                             const parentData = parentDocSnap.data();
                             username = parentData.username || "Unknown User";
@@ -88,35 +90,49 @@ const Posts = () => {
         };
     }, []);
 
+    // Handler for the search input field
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value.toLowerCase());
+    };
+
+    // Filtering posts by postName based on the search term
+    const filteredPosts = postsData.filter((post) =>
+        post.postName.toLowerCase().includes(searchTerm) // Keep case-insensitive match
+    );
+
     return (
         <div id="Posts">
-            <h1>Posts</h1>
+            <form onSubmit={(e) => e.preventDefault()}>
+                <input
+                    type="text"
+                    placeholder="Search posts by name..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                />
+            </form>
 
             {error && (
                 <div>
-                    <p style={{ color: "red" }}>{error}</p>
-                    <button onClick={fetchPosts} style={{ color: "blue", cursor: "pointer" }}>
+                    <h1>{error}</h1>
+                    <button onClick={fetchPosts}>
                         Retry
                     </button>
                 </div>
             )}
 
-            {loading && postsData.length === 0 && <p>Loading posts...</p>}
+            {loading && postsData.length === 0 && <h1>Loading posts...</h1>}
 
-            {postsData.length > 0 ? (
-                <ul>
-                    {postsData.map((post, index) => (
-                        <li key={post.postName || index}>
-                            <p><strong>Post Name:</strong> {post.postName}</p>
-                            <p><strong>Text:</strong> {post.text}</p>
-                            <p><strong>Timestamp:</strong> {post.timestamp?.toDate().toString() || "N/A"}</p>
-                            <p><strong>Username:</strong> {post.username}</p>
-                            <p><strong>Email:</strong> {post.email}</p>
-                        </li>
-                    ))}
-                </ul>
+            {filteredPosts.length > 0 ? (
+                filteredPosts.map((post, index) => (
+                    <div key={post.postName || index}>
+                        <h1>Title: {post.postName}</h1>
+                        <h2>Created at: {post.timestamp?.toDate().toString() || "N/A"}</h2>
+                        <h3>User: {post.username}</h3>
+                        <Link to={`/Home/PostDetail?id=${post.postName}`}>Look Post</Link>
+                    </div>
+                ))
             ) : (
-                !loading && !error && <p>No posts found.</p>
+                !loading && !error && <h1>No posts found.</h1>
             )}
 
             {hasMore && !error && (
@@ -130,7 +146,7 @@ const Posts = () => {
                 </button>
             )}
 
-            {loading && postsData.length > 0 && <p style={{ fontStyle: "italic" }}>Loading more posts...</p>}
+            {loading && postsData.length > 0 && <h1>Loading more posts...</h1>}
         </div>
     );
 };
