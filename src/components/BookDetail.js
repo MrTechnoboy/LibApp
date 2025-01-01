@@ -17,7 +17,7 @@ const BookDetail = () => {
 
     // React Query: Fetch Book Data
     const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
-        "bookDetails", // Descriptive query key
+        "bookDetail", // Descriptive query key
         () => axios.get(`https://www.googleapis.com/books/v1/volumes/${id}`), // Fetch function
         {
             cacheTime: 300000,
@@ -89,13 +89,6 @@ const BookDetail = () => {
             await setDoc(doc(booksSubcollectionRef, id), {
                 title: title || "N/A",
                 authors,
-                publishedDate: publishedDate || "Unknown",
-                description: description || "No description available",
-                pageCount: pageCount || 0,
-                averageRating: averageRating || "N/A",
-                maturityRating: maturityRating || "N/A",
-                categories,
-                epub,
             });
             console.log("Book added successfully to the user's library.");
             window.alert("Book added to your library!");
@@ -107,7 +100,7 @@ const BookDetail = () => {
 
     // JSX for rendering book details
     return (
-        <div id="BookDetail" style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+        <div id="BookDetail">
             <h1>{title || "No title available"}</h1>
             <img
                 src={image}
@@ -132,10 +125,8 @@ const BookDetail = () => {
                 Epub Availability:{" "}
                 <span style={{ color: epub === "Available" ? "green" : "red" }}>{epub}</span>
             </h3>
-            <div style={{ marginTop: "20px" }}>
-                <button onClick={refetch}>
-                    Refresh
-                </button>
+            <div>
+                <button onClick={refetch}>Refresh</button>
                 <button onClick={addToBooks} disabled={!email}>
                     {email ? "Add to My Books" : "Log in to Add Books"}
                 </button>

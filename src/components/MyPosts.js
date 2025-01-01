@@ -1,21 +1,21 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { collection, getDocs, query, limit, startAfter } from "firebase/firestore"; // Added startAfter for pagination
+import React, { useEffect, useState, useCallback } from "react";
+import { collection, getDocs, query, limit, startAfter } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { Link, useNavigate } from "react-router-dom";
 
 const MyPosts = () => {
-    const [posts, setPosts] = useState([]); // All posts fetched from Firestore
-    const [filteredPosts, setFilteredPosts] = useState([]); // Posts to display after filtering
+    const [posts, setPosts] = useState([]);
+    const [filteredPosts, setFilteredPosts] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState(() => sessionStorage.getItem('searchQuery') || ""); // Get search query from sessionStorage
-    const [error, setError] = useState(null); // Error state for better error handling
-    const [hasMorePosts, setHasMorePosts] = useState(true); // For "Load More" button and pagination
-    const [lastFetchedPost, setLastFetchedPost] = useState(null); // For pagination reference (last document)
+    const [searchQuery, setSearchQuery] = useState(() => sessionStorage.getItem("searchQuery") || "");
+    const [error, setError] = useState(null);
+    const [hasMorePosts, setHasMorePosts] = useState(true);
+    const [lastFetchedPost, setLastFetchedPost] = useState(null);
 
     const navigate = useNavigate();
 
     const createPost = () => {
-        navigate('/Home/CreatePost');
+        navigate("/Home/CreatePost");
     };
 
     // Debounce function
@@ -32,13 +32,13 @@ const MyPosts = () => {
     const debounceSearchChange = useCallback(
         debounce((value) => {
             setSearchQuery(value);
-            sessionStorage.setItem('searchQuery', value); // Save search query
+            sessionStorage.setItem("searchQuery", value);
         }, 300),
         []
     );
 
     const handleSearchChange = (e) => {
-        debounceSearchChange(e.target.value); // Debounced search handler
+        debounceSearchChange(e.target.value);
     };
 
     const fetchPosts = async (isLoadingMore = false, resetSearch = false) => {
@@ -46,101 +46,124 @@ const MyPosts = () => {
             setLoading(true);
             setError(null);
 
-            const email = sessionStorage.getItem('emailS') || sessionStorage.getItem('emailL');
+            const email = sessionStorage.getItem("emailS") || sessionStorage.getItem("emailL");
             if (!email) {
-                throw new Error('User email not found in sessionStorage.');
+                throw new Error("User email not found in sessionStorage.");
             }
 
-            const userPostsRef = collection(db, 'LibraryWebsite', email, 'posts');
+            const userPostsRef = collection(db, "LibraryWebsite", email, "posts");
             let postsQuery;
 
             if (isLoadingMore && lastFetchedPost) {
-                // Fetch next set of documents after the last one
                 postsQuery = query(userPostsRef, limit(10), startAfter(lastFetchedPost));
             } else {
-                // Initial fetch or refreshing all posts
                 postsQuery = query(userPostsRef, limit(10));
             }
 
             const querySnapshot = await getDocs(postsQuery);
 
+            // Check for empty results
             if (querySnapshot.empty) {
-                setHasMorePosts(false); // No more posts to load
+                if (!isLoadingMore) {
+                    setPosts([]);
+                    setFilteredPosts([]);
+                }
+                setHasMorePosts(false);
                 return;
             }
 
             const fetchedPosts = [];
             querySnapshot.forEach((doc) => {
-                // Exclude the "examplePost" document
-                if (doc.id === 'examplePost') return;
+                if (doc.id === "examplePost") return;
 
                 const postData = doc.data();
                 const timestamp = postData.timestamp?.toDate();
 
                 fetchedPosts.push({
-                    id: doc.id, // Document name
+                    id: doc.id,
                     text: postData.text || "No text provided",
-                    timestamp: timestamp
-                        ? timestamp.toLocaleString()
-                        : "No timestamp available", // Format Date
+                    timestamp: timestamp ? timestamp.toLocaleString() : "No timestamp available",
                 });
             });
 
-            // Update the last fetched post for pagination
             const lastPost = querySnapshot.docs[querySnapshot.docs.length - 1];
             setLastFetchedPost(lastPost);
 
             if (isLoadingMore) {
-                // Add the new posts to existing list
                 setPosts((prevPosts) => [...prevPosts, ...fetchedPosts]);
                 setFilteredPosts((prevPosts) => [...prevPosts, ...fetchedPosts]);
             } else {
-                // Replace existing posts
                 setPosts(fetchedPosts);
 
-                // If resetSearch is true (e.g., initial load), show all fetched posts
                 if (resetSearch || searchQuery === "") {
                     setFilteredPosts(fetchedPosts);
                 } else {
-                    // Filter posts if a search term exists
-                    const filtered = fetchedPosts.filter(post =>
+                    const filtered = fetchedPosts.filter((post) =>
                         post.id.toLowerCase().includes(searchQuery.toLowerCase())
                     );
                     setFilteredPosts(filtered);
                 }
 
-                setHasMorePosts(true); // Reset flag for next load
+                setHasMorePosts(true);
             }
         } catch (error) {
-            console.error('Error fetching posts:', error); // Log for debugging
-            setError(error.message); // Display error in UI
+            let userMessage = "Something went wrong while fetching posts.";
+            // Handle Firestore-specific errors if necessary
+            if (error.code === "permission-denied") {
+                userMessage = "You do not have permission to access these posts.";
+            }
+            console.error("Error fetching posts:", error);
+            setError(userMessage);
         } finally {
             setLoading(false);
         }
     };
 
-    // Initial fetch on component mount
     useEffect(() => {
-        fetchPosts(false, true); // Reset the search and set initial filteredPosts
+        fetchPosts(false, true);
     }, []);
 
-    // Update filtered posts whenever searchQuery changes
     useEffect(() => {
-        const query = searchQuery.toLowerCase(); // Convert query to lowercase for case-insensitive search
-        const filtered = posts.filter(post =>
+        const query = searchQuery.toLowerCase();
+        const filtered = posts.filter((post) =>
             post.id.toLowerCase().includes(query)
         );
         setFilteredPosts(filtered);
     }, [searchQuery, posts]);
 
     const handleResetSearch = () => {
-        setSearchQuery(""); // Clear the search term
-        sessionStorage.removeItem('searchQuery'); // Clear from sessionStorage
-        setFilteredPosts(posts); // Show all posts
+        setSearchQuery("");
+        sessionStorage.removeItem("searchQuery");
+        setFilteredPosts(posts);
     };
 
     const handleLoadMore = () => {
-        fetchPosts(true); // Load more posts when "Load More" is clicked
+        fetchPosts(true);
+    };
+
+    const renderPosts = () => {
+        if (filteredPosts.length === 0) {
+            return (
+                <div>
+                    <h1>No posts found.</h1>
+                    {searchQuery && <button onClick={handleResetSearch}>Reset Search</button>}
+                </div>
+            );
+        }
+
+        return filteredPosts.map((post) => (
+            <div key={post.id}>
+                <h1>Title: {post.id}</h1>
+                <h2>Created at: {post.timestamp}</h2>
+                <Link
+                    to={`/Home/MyPostDetail`}
+                    state={{ id: post.id }}
+                    aria-label={`View details for post ${post.id}`}
+                >
+                    View Post
+                </Link>
+            </div>
+        ));
     };
 
     if (loading && posts.length === 0) {
@@ -148,7 +171,7 @@ const MyPosts = () => {
     }
 
     if (error) {
-        return <h1>Error: {error}</h1>; // Display any error
+        return <h1>Error: {error}</h1>;
     }
 
     return (
@@ -157,30 +180,16 @@ const MyPosts = () => {
                 <input
                     type="text"
                     placeholder="Search your posts"
-                    value={searchQuery} // Bind the state to the input value
-                    onChange={handleSearchChange} // Update state on change
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    aria-label="Search through your posts" // Accessible search bar
                 />
             </form>
             <button onClick={createPost}>+ Create Post</button>
-            {filteredPosts.length === 0 ? (
-                <div>
-                    <h1>No posts found.</h1>
-                    {searchQuery && (
-                        <button onClick={handleResetSearch}>Reset Search</button> // Friendly reset option
-                    )}
-                </div>
-            ) : (
-                filteredPosts.map((post) => (
-                    <div key={post.id}>
-                        <h1>Title: {post.id}</h1>
-                        <h2>Created at: {post.timestamp}</h2>
-                        <Link to={`/Home/MyPostDetail`} state={{ id: post.id }}>Look Your Post</Link>
-                    </div>
-                ))
-            )}
+            {renderPosts()}
             <button
                 onClick={handleLoadMore}
-                disabled={!hasMorePosts || loading} // Disable "Load More" button if no more posts or loading
+                disabled={!hasMorePosts || loading}
             >
                 {loading ? "Loading..." : "Load More"}
             </button>

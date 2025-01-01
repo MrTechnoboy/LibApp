@@ -1,36 +1,30 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { getDocs, collectionGroup, query, orderBy, limit, startAfter, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 import { Link } from "react-router-dom";
+import { format } from "date-fns"; // for timestamp formatting
 
 const Posts = () => {
     const [postsData, setPostsData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState(null);
-    // Initialize with value from localStorage
     const [searchTerm, setSearchTerm] = useState(() => sessionStorage.getItem("postsSearchTerm") || "");
 
     const lastVisiblePostRef = useRef(null);
+    const isFetchingPosts = useRef(false); // Prevents concurrent fetches
 
     const fetchPosts = useCallback(async () => {
-        if (!hasMore) return;
+        if (!hasMore || isFetchingPosts.current) return;
+
+        isFetchingPosts.current = true;
         setLoading(true);
         setError(null);
 
         try {
             const postsQuery = lastVisiblePostRef.current
-                ? query(
-                    collectionGroup(db, "posts"),
-                    orderBy("timestamp"),
-                    startAfter(lastVisiblePostRef.current),
-                    limit(20)
-                )
-                : query(
-                    collectionGroup(db, "posts"),
-                    orderBy("timestamp"),
-                    limit(20)
-                );
+                ? query(collectionGroup(db, "posts"), orderBy("timestamp"), startAfter(lastVisiblePostRef.current), limit(20))
+                : query(collectionGroup(db, "posts"), orderBy("timestamp"), limit(20));
 
             const querySnapshot = await getDocs(postsQuery);
 
@@ -51,8 +45,8 @@ const Posts = () => {
                         const parentDocSnap = await getDoc(parentDocRef);
                         if (parentDocSnap.exists()) {
                             const parentData = parentDocSnap.data();
-                            username = parentData.username || "Unknown User";
-                            email = parentData.em || "No Email";
+                            username = parentData.username || username;
+                            email = parentData.email || email;
                         }
                     }
 
@@ -76,8 +70,8 @@ const Posts = () => {
         } catch (error) {
             console.error("Error fetching posts:", error);
             setError("Failed to load posts. Please try again later.");
-            window.alert("Error fetching posts: " + error.message);
         } finally {
+            isFetchingPosts.current = false;
             setLoading(false);
         }
     }, [hasMore]);
@@ -87,30 +81,23 @@ const Posts = () => {
     }, [fetchPosts]);
 
     useEffect(() => {
-        return () => {
-            lastVisiblePostRef.current = null;
-        };
-    }, []);
-
-    // Persist `searchTerm` to localStorage whenever it changes
-    useEffect(() => {
         sessionStorage.setItem("postsSearchTerm", searchTerm);
     }, [searchTerm]);
 
-    // Handler for the search input field
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value.toLowerCase());
     };
 
-    // Filtering posts by postName based on the search term
-    const filteredPosts = postsData.filter((post) =>
-        post.postName.toLowerCase().includes(searchTerm) // Keep case-insensitive match
-    );
+    // Memoized filtered posts for optimization
+    const filteredPosts = useMemo(() => {
+        return postsData.filter((post) =>
+            post.postName.toLowerCase().includes(searchTerm)
+        );
+    }, [postsData, searchTerm]);
 
     return (
         <div id="Posts">
             <form onSubmit={(e) => e.preventDefault()}>
-                {/* Persisted search input */}
                 <input
                     type="text"
                     placeholder="Search posts by name..."
@@ -120,21 +107,19 @@ const Posts = () => {
             </form>
 
             {error && (
-                <div>
+                <div aria-live="polite">
                     <h1>{error}</h1>
-                    <button onClick={fetchPosts}>
-                        Retry
-                    </button>
+                    <button onClick={fetchPosts}>Retry</button>
                 </div>
             )}
 
             {loading && postsData.length === 0 && <h1>Loading posts...</h1>}
 
             {filteredPosts.length > 0 ? (
-                filteredPosts.map((post, index) => (
-                    <div key={post.postName || index}>
+                filteredPosts.map((post) => (
+                    <div key={post.postName}>
                         <h1>Title: {post.postName}</h1>
-                        <h2>Created at: {post.timestamp?.toDate().toString() || "N/A"}</h2>
+                        <h2>Created at: {post.timestamp ? format(post.timestamp.toDate(), "MMM dd, yyyy HH:mm") : "N/A"}</h2>
                         <h3>User: {post.username}</h3>
                         <Link to={`/Home/PostDetail?id=${post.postName}&username=${post.username}`}>Look Post</Link>
                     </div>
@@ -143,13 +128,8 @@ const Posts = () => {
                 !loading && !error && <h1>No posts found.</h1>
             )}
 
-            {hasMore && !error && (
-                <button
-                    onClick={fetchPosts}
-                    disabled={loading}
-                    aria-busy={loading}
-                    aria-disabled={loading}
-                >
+            {hasMore && (
+                <button onClick={fetchPosts} disabled={loading} aria-busy={loading}>
                     {loading ? "Loading..." : "Load More"}
                 </button>
             )}
@@ -159,4 +139,4 @@ const Posts = () => {
     );
 };
 
-export default Posts
+export default Posts;

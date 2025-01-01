@@ -35,7 +35,7 @@ const BrowseBooks = () => {
         hasNextPage,
         fetchNextPage,
     } = useInfiniteQuery(
-        ["infinite", q], // Query key includes `q`
+        ["browseBooks", q], // Query key includes `q`
         fetchBooks, // Fetch function
         {
             getNextPageParam: (_lastPage, pages) => {

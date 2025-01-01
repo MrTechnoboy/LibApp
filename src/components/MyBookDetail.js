@@ -1,8 +1,8 @@
 import React from "react";
 import { useQuery } from "react-query";
 import axios from "axios";
-import { getFirestore, doc, collection, deleteDoc, query, where, getDocs } from "firebase/firestore";
-import { getApp } from "firebase/app";
+import { doc, collection, deleteDoc, query, where, getDocs } from "firebase/firestore";
+import {db} from "./firebaseConfig";
 import {useNavigate} from "react-router-dom";
 
 const MyBookDetail = () => {
@@ -11,20 +11,13 @@ const MyBookDetail = () => {
 
     const navigate = useNavigate();
 
-    const onSuccess = (data) => {
-        console.log("Perform side effects after data fetching", data);
-    };
-
-    const onError = (error) => {
-        console.log("Perform side effects after encountering error", error);
-    };
+    // Get logged-in user email from sessionStorage
+    const email = sessionStorage.getItem("emailL") || sessionStorage.getItem("emailS");
 
     // Make a GET request to the API
     const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
-        "query2",
-        () => {
-            return axios.get(`https://www.googleapis.com/books/v1/volumes/${id}`);
-        },
+        "myBookDetail",
+        () => {return axios.get(`https://www.googleapis.com/books/v1/volumes/${id}`);},
         {
             cacheTime: 300000,
             staleTime: 0,
@@ -34,12 +27,14 @@ const MyBookDetail = () => {
             refetchIntervalInBackground: false,
             enabled: true,
             keepPreviousData: true,
-            onSuccess,
-            onError,
-            select: (data) => {
-                return data.data;
+            onSuccess: (data) => {
+                console.log("Data fetched successfully:", data);
             },
-        }
+            onError: (error) => {
+                console.error("Error fetching data:", error);
+            },
+            select: (response) => response.data, // Extract the main object
+        },
     );
 
     if (isLoading) {
@@ -51,37 +46,38 @@ const MyBookDetail = () => {
     }
 
     if (isError) {
-        return <h1>{error.message}</h1>;
+        return(
+        <div>
+            <h1>An error occurred while fetching book details.</h1>
+            <p>{error?.message || "Unknown error occurred. Please try again later."}</p>
+            <button onClick={() => navigate("/Home")}>Go Back</button>
+        </div>
+        );
     }
 
-    // Get all the fields
-    const title = data?.volumeInfo.title;
-    const publishedDate = data?.volumeInfo.publishedDate;
-    const description = data?.volumeInfo.description;
-    const pageCount = data?.volumeInfo.pageCount;
-    const averageRating = data?.volumeInfo.averageRating;
-    const maturityRating = data?.volumeInfo.maturityRating;
-    const imageLinks = data?.volumeInfo.imageLinks.thumbnail;
-    let epub;
-    if (data?.accessInfo.epub.isAvailable === true) {
-        epub = "Available";
-    } else {
-        epub = "Not Available";
-    }
+    // Destructure relevant fields from response
+    const {
+        title,
+        authors = [],
+        publishedDate,
+        description,
+        pageCount,
+        averageRating,
+        maturityRating,
+        imageLinks,
+        categories = [],
+    } = data?.volumeInfo || {};
+
+    const image = imageLinks?.thumbnail || "default-image-url.jpg"; // Fallback for missing images
+    const epub = data?.accessInfo.epub.isAvailable ? "Available" : "Not Available";
 
     const handleRemove = async () => {
         try {
-            // Get the email from localStorage
-            const email = sessionStorage.getItem("emailL") || sessionStorage.getItem("emailS");
 
             if (!email) {
                 alert("User email not found in localStorage!");
                 return;
             }
-
-            // Initialize Firestore
-            const app = getApp(); // Get the default Firebase app
-            const db = getFirestore(app);
 
             // Reference to the books subcollection
             const booksRef = collection(db, "LibraryWebsite", email, "books");
@@ -107,23 +103,31 @@ const MyBookDetail = () => {
 
     return (
         <div id={"MyBookDetail"}>
-            <h1>{title}</h1>
-            <img src={imageLinks} alt={title} />
-            {(data?.volumeInfo.authors || []).map((author, index) => (
-                <h2 key={index}>{author}</h2>
-            ))}
-            <h3> Published date: {publishedDate}</h3>
-            <h2>Genre:</h2>
-            {(data?.volumeInfo.categories || []).map((author, index) => (
-                <h2 key={index}>{author}</h2>
-            ))}
-            <h3>{description}</h3>
-            <h3>Maturity Rating: {maturityRating}</h3>
-            <h3> Pages: {pageCount}</h3>
-            <h3> Avg Rating: {averageRating}</h3>
-            <h3> Available: {epub}</h3>
+            <h1>{title || 'No title available'}</h1>
+            <img src={image} alt={title}/>
+            <div>
+                {authors.length > 0 ? (
+                    authors.map((author, index) => <h2 key={index}>{author}</h2>)
+                ) : (
+                    <h2>No authors found</h2>
+                )}
+            </div>
+            <h3> Published date: {publishedDate || 'Unknown'}</h3>
+            <h3>
+                Genre: {categories.length > 0 ? categories.join(", ") : "No genre information available"}
+            </h3>
+            <h3>{description || 'No description for this book'}</h3>
+            <h3>Maturity Rating: {maturityRating || 'N/A'}</h3>
+            <h3> Pages: {pageCount || 'N/A'}</h3>
+            <h3> Avg Rating: {averageRating || 'N/A'}</h3>
+            <h3>
+                Epub Availability:{" "}
+                <span style={{color: epub === "Available" ? "green" : "red"}}>{epub}</span>
+            </h3>
             <button onClick={refetch}>Refresh</button>
-            <button onClick={handleRemove}>Remove from my books</button>
+            <button onClick={handleRemove} disabled={!email}>
+                {email ? "Remove from my books" : "Log in to Remove Book"}
+            </button>
         </div>
     );
 };
