@@ -70,6 +70,15 @@
       border-radius: 20px;
       background-color: bisque;
       font-weight: bolder;
+      cursor: pointer;
+      &:hover{
+        background-color: saddlebrown;
+        color: bisque;
+      };
+      &:active{
+        background-color: bisque;
+        color: black;
+      };
     };
   };
   @include laptop_small {
@@ -119,15 +128,6 @@
     };
     button{
       font-size: 40px;
-      cursor: pointer;
-      &:hover{
-        background-color: saddlebrown;
-        color: bisque;
-      };
-      &:active{
-        background-color: bisque;
-        color: black;
-      };
     };
   };
 };
