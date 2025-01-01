@@ -19,6 +19,8 @@ const PostDetail = () => {
                 const userSnapshot = await getDocs(queryUser);
 
                 if (userSnapshot.empty) {
+                    window.alert("No user found with the provided username.");
+                    console.error("No user found with the provided username.");
                     setError("No user found with the provided username.");
                     return;
                 }
@@ -39,6 +41,7 @@ const PostDetail = () => {
             } catch (e) {
                 setError("An error occurred while fetching the post details.");
                 console.error(e); // Log any errors for debugging
+                window.alert("An error occurred while fetching the post details.");
             }
         };
 

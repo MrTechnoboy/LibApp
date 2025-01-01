@@ -76,6 +76,7 @@ const Posts = () => {
         } catch (error) {
             console.error("Error fetching posts:", error);
             setError("Failed to load posts. Please try again later.");
+            window.alert("Error fetching posts: " + error.message);
         } finally {
             setLoading(false);
         }
