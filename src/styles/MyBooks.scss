@@ -31,6 +31,25 @@
   };
 
   @include mobile{
+    button{
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 2px solid black;
+      border-radius: 20px;
+      background-color: bisque;
+      font-weight: bolder;
+      cursor: pointer;
+      &:hover{
+        background-color: saddlebrown;
+        color: bisque;
+      };
+      &:active{
+        background-color: bisque;
+        color: black;
+      };
+    };
+    text-align: center;
     form{
       text-align: center;
       margin-top: 10px;
@@ -81,6 +100,9 @@
     };
   };
   @include laptop_small{
+    button{
+      font-size: 20px;
+    };
     form {
       input {
         font-size: 30px;
@@ -95,6 +117,9 @@
     };
   };
   @include laptop_large{
+    button{
+      font-size: 40px;
+    };
     form{
       margin-top: 30px;
       input{

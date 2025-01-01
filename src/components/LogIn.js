@@ -31,8 +31,9 @@ const LogIn=()=>{
                 window.alert("You are now logged in");
             })
             .catch(err=>{
-                console.log(err.message);
                 window.alert(err.message);
+                console.log(err.message);
+                throw err;
             });
     }
 

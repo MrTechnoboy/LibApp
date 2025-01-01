@@ -7,7 +7,7 @@ const MyPosts = () => {
     const [posts, setPosts] = useState([]); // All posts fetched from Firestore
     const [filteredPosts, setFilteredPosts] = useState([]); // Posts to display after filtering
     const [loading, setLoading] = useState(true);
-    const [searchQuery, setSearchQuery] = useState(sessionStorage.getItem('searchQuery') || ""); // Get search query from sessionStorage
+    const [searchQuery, setSearchQuery] = useState(() => sessionStorage.getItem('searchQuery') || ""); // Get search query from sessionStorage
     const [error, setError] = useState(null); // Error state for better error handling
     const [hasMorePosts, setHasMorePosts] = useState(true); // For "Load More" button and pagination
     const [lastFetchedPost, setLastFetchedPost] = useState(null); // For pagination reference (last document)
@@ -41,15 +41,13 @@ const MyPosts = () => {
         debounceSearchChange(e.target.value); // Debounced search handler
     };
 
-    const fetchPosts = async (isLoadingMore = false) => {
+    const fetchPosts = async (isLoadingMore = false, resetSearch = false) => {
         try {
             setLoading(true);
             setError(null);
 
             const email = sessionStorage.getItem('emailS') || sessionStorage.getItem('emailL');
             if (!email) {
-                window.alert('User email not found in sessionStorage.');
-                console.error('User email not found in sessionStorage.');
                 throw new Error('User email not found in sessionStorage.');
             }
 
@@ -92,17 +90,28 @@ const MyPosts = () => {
             const lastPost = querySnapshot.docs[querySnapshot.docs.length - 1];
             setLastFetchedPost(lastPost);
 
-            // Add the new posts to existing state if loading more; otherwise, replace them
             if (isLoadingMore) {
+                // Add the new posts to existing list
                 setPosts((prevPosts) => [...prevPosts, ...fetchedPosts]);
                 setFilteredPosts((prevPosts) => [...prevPosts, ...fetchedPosts]);
             } else {
+                // Replace existing posts
                 setPosts(fetchedPosts);
-                setFilteredPosts(fetchedPosts);
+
+                // If resetSearch is true (e.g., initial load), show all fetched posts
+                if (resetSearch || searchQuery === "") {
+                    setFilteredPosts(fetchedPosts);
+                } else {
+                    // Filter posts if a search term exists
+                    const filtered = fetchedPosts.filter(post =>
+                        post.id.toLowerCase().includes(searchQuery.toLowerCase())
+                    );
+                    setFilteredPosts(filtered);
+                }
+
                 setHasMorePosts(true); // Reset flag for next load
             }
         } catch (error) {
-            window.alert('Error fetching posts: ' + error.message);
             console.error('Error fetching posts:', error); // Log for debugging
             setError(error.message); // Display error in UI
         } finally {
@@ -112,7 +121,7 @@ const MyPosts = () => {
 
     // Initial fetch on component mount
     useEffect(() => {
-        fetchPosts();
+        fetchPosts(false, true); // Reset the search and set initial filteredPosts
     }, []);
 
     // Update filtered posts whenever searchQuery changes
@@ -124,6 +133,12 @@ const MyPosts = () => {
         setFilteredPosts(filtered);
     }, [searchQuery, posts]);
 
+    const handleResetSearch = () => {
+        setSearchQuery(""); // Clear the search term
+        sessionStorage.removeItem('searchQuery'); // Clear from sessionStorage
+        setFilteredPosts(posts); // Show all posts
+    };
+
     const handleLoadMore = () => {
         fetchPosts(true); // Load more posts when "Load More" is clicked
     };
@@ -133,7 +148,6 @@ const MyPosts = () => {
     }
 
     if (error) {
-        window.alert(error);
         return <h1>Error: {error}</h1>; // Display any error
     }
 
@@ -152,7 +166,7 @@ const MyPosts = () => {
                 <div>
                     <h1>No posts found.</h1>
                     {searchQuery && (
-                        <button onClick={() => setSearchQuery("")}>Reset Search</button> // Friendly reset option
+                        <button onClick={handleResetSearch}>Reset Search</button> // Friendly reset option
                     )}
                 </div>
             ) : (
