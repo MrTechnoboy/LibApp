@@ -21,7 +21,7 @@ const LogIn=()=>{
         e.preventDefault();
 
         const email = logINRef.current.email.value; // Access email input via ref
-        localStorage.setItem('emailL',email);
+        sessionStorage.setItem('emailL',email);
         const password = logINRef.current.password.value;
 
         signInWithEmailAndPassword(auth,email,password)

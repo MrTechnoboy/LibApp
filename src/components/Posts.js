@@ -1,14 +1,15 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { getDocs, collectionGroup, query, orderBy, limit, startAfter, getDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const Posts = () => {
     const [postsData, setPostsData] = useState([]);
     const [loading, setLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true);
     const [error, setError] = useState(null);
-    const [searchTerm, setSearchTerm] = useState(""); // To store the search input from the user
+    // Initialize with value from localStorage
+    const [searchTerm, setSearchTerm] = useState(() => sessionStorage.getItem("postsSearchTerm") || "");
 
     const lastVisiblePostRef = useRef(null);
 
@@ -90,6 +91,11 @@ const Posts = () => {
         };
     }, []);
 
+    // Persist `searchTerm` to localStorage whenever it changes
+    useEffect(() => {
+        sessionStorage.setItem("postsSearchTerm", searchTerm);
+    }, [searchTerm]);
+
     // Handler for the search input field
     const handleSearchChange = (e) => {
         setSearchTerm(e.target.value.toLowerCase());
@@ -103,6 +109,7 @@ const Posts = () => {
     return (
         <div id="Posts">
             <form onSubmit={(e) => e.preventDefault()}>
+                {/* Persisted search input */}
                 <input
                     type="text"
                     placeholder="Search posts by name..."
@@ -128,7 +135,7 @@ const Posts = () => {
                         <h1>Title: {post.postName}</h1>
                         <h2>Created at: {post.timestamp?.toDate().toString() || "N/A"}</h2>
                         <h3>User: {post.username}</h3>
-                        <Link to={`/Home/PostDetail?id=${post.postName}`}>Look Post</Link>
+                        <Link to={`/Home/PostDetail?id=${post.postName}&username=${post.username}`}>Look Post</Link>
                     </div>
                 ))
             ) : (
@@ -151,4 +158,4 @@ const Posts = () => {
     );
 };
 
-export default Posts;
+export default Posts

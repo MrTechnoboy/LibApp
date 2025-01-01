@@ -72,7 +72,7 @@ const MyBookDetail = () => {
     const handleRemove = async () => {
         try {
             // Get the email from localStorage
-            const email = localStorage.getItem("emailL") || localStorage.getItem("emailS");
+            const email = sessionStorage.getItem("emailL") || sessionStorage.getItem("emailS");
 
             if (!email) {
                 alert("User email not found in localStorage!");

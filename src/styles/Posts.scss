@@ -1,32 +1,133 @@
-#Posts{
-  @mixin mobile{
-    @media (min-width: 320px){
+#Posts {
+  @mixin mobile {
+    @media (min-width: 320px) {
       @content;
     };
   };
-  @mixin tablet_small{
+  @mixin tablet_small {
     @media (min-width: 426px) {
       @content;
     };
   };
-  @mixin tablet_large{
-    @media (min-width: 597px){
+  @mixin tablet_large {
+    @media (min-width: 597px) {
       @content;
     };
   };
-  @mixin laptop_small{
+  @mixin laptop_small {
     @media (min-width: 769px) {
       @content;
     };
   };
-  @mixin laptop_large{
-    @media (min-width: 1440px){
+  @mixin laptop_large {
+    @media (min-width: 1025px) {
       @content;
     };
   };
-  @mixin fourK_small{
-    @media (min-width: 2001px){
+  @mixin fourK {
+    @media (min-width: 1441px) {
       @content;
+    };
+  };
+
+  @include mobile {
+    text-align: center;
+    border: 5px solid black;
+    margin-top: 20px;
+    border-radius: 20px;
+    form{
+      margin-top: 20px;
+      margin-bottom: 20px;
+      input{
+        padding: 10px;
+        border: 2px solid black;
+        background-color: bisque;
+        border-radius: 20px;
+        text-align: center;
+      };
+    };
+    div{
+      border-top: 5px solid black;
+      border-bottom: 5px solid black;
+      background-color: bisque;
+      a{
+        text-decoration: none;
+      };
+      &:hover{
+        background-color: saddlebrown;
+        color: bisque;
+        a{
+          color: bisque;
+        };
+      };
+      cursor: pointer;
+    };
+    button{
+      margin-top: 20px;
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 2px solid black;
+      border-radius: 20px;
+      background-color: bisque;
+      font-weight: bolder;
+    };
+  };
+  @include laptop_small {
+    form{
+      input{
+        font-size: 20px;
+      };
+    };
+    button{
+      font-size: 20px;
+    };
+  };
+  div{
+    h1{
+      font-size: 40px;
+    };
+    h2{
+      font-size: 30px;
+    };
+    h3{
+      font-size: 20px;
+    };
+    a{
+      font-size: 20px;
+    };
+  };
+  @include laptop_large {
+    form{
+      input{
+        font-size: 40px;
+        border: 5px solid black;
+      };
+    };
+    div{
+      h1{
+        font-size: 70px;
+      };
+      h2{
+        font-size: 60px;
+      };
+      h3{
+        font-size: 50px;
+      };
+      a{
+        font-size: 50px;
+      };
+    };
+    button{
+      font-size: 40px;
+      cursor: pointer;
+      &:hover{
+        background-color: saddlebrown;
+        color: bisque;
+      };
+      &:active{
+        background-color: bisque;
+        color: black;
+      };
     };
   };
 };

@@ -69,7 +69,7 @@ const SignUp = () => {
         e.preventDefault();
 
         const email = signupFormRef.current?.email.value; // Access email input via ref
-        localStorage.setItem('emailS',email);
+        sessionStorage.setItem('emailS',email);
         const password = signupFormRef.current?.password.value;
 
         if (!email || !password) {

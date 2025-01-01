@@ -1,11 +1,16 @@
-// Import
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import { useInfiniteQuery } from "react-query";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const BrowseBooks = () => {
-    const [q, setQ] = useState("Space");
+    // Retrieve saved query from localStorage or default to "Space"
+    const [q, setQ] = useState(() => sessionStorage.getItem("searchQuery") || "Space");
+
+    // Update localStorage whenever `q` changes
+    useEffect(() => {
+        sessionStorage.setItem("searchQuery", q);
+    }, [q]);
 
     const fetchBooks = ({ pageParam = 0, queryKey }) => {
         const searchQuery = queryKey[1]; // Extract `q` from the queryKey
@@ -33,12 +38,11 @@ const BrowseBooks = () => {
                 const maxResults = 10; // Match maxResults from the API call
                 const totalItems = _lastPage.data.totalItems || 0;
 
-                // Paginate only if there are more results available
                 if (pages.length * maxResults < totalItems) {
                     return pages.length * maxResults; // Compute the `startIndex` for the next page
                 }
 
-                return undefined; // End of pagination
+                return undefined;
             },
         }
     );
@@ -61,18 +65,18 @@ const BrowseBooks = () => {
                 />
             </form>
             <div id="booksList">
-                {isLoading && <div>Loading...</div>}
-                {isFetching && <div>Fetching...</div>}
-                {isFetchingNextPage && <div>Fetching next page...</div>}
-                {isError && <div>Error: {error.message}</div>}
+                {isLoading && <h1>Loading...</h1>}
+                {isFetching && <h1>Fetching...</h1>}
+                {isFetchingNextPage && <h1>Fetching next page...</h1>}
+                {isError && <h1>Error: {error.message}</h1>}
                 {data?.pages.map((group, i) => (
                     <div id="Book" key={i}>
                         <Fragment key={i}>
                             {group.data.items.map((item) => (
                                 <div key={item.id}>
                                     <h1>{item.volumeInfo.title}</h1>
-                                    {(item.volumeInfo.authors ||[]).map((author, index)=>(
-                                            <h2 key={index}>{author}</h2>
+                                    {(item.volumeInfo.authors || []).map((author, index) => (
+                                        <h2 key={index}>{author}</h2>
                                     ))}
                                     <Link to={`/Home/BookDetail?id=${item.id}`}>Look Details</Link>
                                 </div>

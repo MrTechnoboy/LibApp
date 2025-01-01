@@ -10,8 +10,8 @@ const BookDetail = () => {
     // Get the page's URL id
     const id=new URLSearchParams(window.location.search).get('id');
 
-    const emailL=localStorage.getItem('emailL');
-    const emailS=localStorage.getItem('emailS');
+    const emailL=sessionStorage.getItem('emailL');
+    const emailS=sessionStorage.getItem('emailS');
     const email=emailL||emailS;// Get whichever email is found
 
     const onSuccess=(data)=>{
