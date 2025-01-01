@@ -25,7 +25,7 @@ const Home = () => {
 
     return (
         <div id={'Home'}>
-            <button type={'button'} onClick={LogOut}>Log out</button>
+            <button type={'button'} onClick={LogOut} aria-label={'Log out of the application'}>Log out</button>
             <div id={'Home-header'}>
                 <Link to={'BrowseBooks'}>Search for Books</Link>
                 <Link to={'MyBooks'}>My Books</Link>

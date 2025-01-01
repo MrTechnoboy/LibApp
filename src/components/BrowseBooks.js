@@ -2,8 +2,10 @@ import React, { Fragment, useState, useEffect } from "react";
 import axios from "axios";
 import { useInfiniteQuery } from "react-query";
 import { Link } from "react-router-dom";
+import _ from "lodash";
 
 const BrowseBooks = () => {
+
     // Retrieve saved query from localStorage or default to "Space"
     const [q, setQ] = useState(() => sessionStorage.getItem("searchQuery") || "Space");
 
@@ -20,6 +22,8 @@ const BrowseBooks = () => {
             `https://www.googleapis.com/books/v1/volumes?q=${searchQuery}&startIndex=${pageParam}&maxResults=${maxResults}`
         );
     };
+
+    const handleInputChange = _.debounce((value) => setQ(value), 300);
 
     const {
         isLoading,
@@ -61,14 +65,17 @@ const BrowseBooks = () => {
                     id="searchBooks"
                     required
                     value={q}
-                    onChange={(e) => setQ(e.target.value)} // Update `q` state
+                    onChange={(e) => handleInputChange(e.target.value)} // Update `q` state
                 />
             </form>
             <div id="booksList">
                 {isLoading && <h1>Loading...</h1>}
                 {isFetching && <h1>Fetching...</h1>}
                 {isFetchingNextPage && <h1>Fetching next page...</h1>}
-                {isError && <h1>Error: {error.message}</h1>}
+                {isError && <div>
+                    Error: {error.message}
+                    <button onClick={() => fetchNextPage()}>Retry</button>
+                </div>}
                 {data?.pages.map((group, i) => (
                     <div id="Book" key={i}>
                         <Fragment key={i}>

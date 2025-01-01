@@ -5,8 +5,6 @@ import { auth, db } from "./firebaseConfig";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { setDoc, doc,collection } from "firebase/firestore";
 
-export let email2="";
-
 const SignUp = () => {
     const signupFormRef = useRef(null); // Reference to the form element
     const navigate = useNavigate(); // Navigate
@@ -20,7 +18,6 @@ const SignUp = () => {
     const handleUsername = async () => {
         const username = signupFormRef.current?.username.value; // Check if ref exists
         const em=signupFormRef.current?.email.value;
-        email2=signupFormRef.current?.email.value;
 
         if (!username) {
             console.error("Username field is empty or form ref is invalid");
@@ -60,7 +57,7 @@ const SignUp = () => {
             }
         } catch (error) {
             console.error("Error writing document: ", error);
-            throw new Error(error);
+            throw error;
         }
     };
 

@@ -1,121 +1,145 @@
 // Imports
 import React from "react";
-import {useQuery} from "react-query";
+import { useQuery } from "react-query";
 import axios from "axios";
-import {doc,collection,setDoc} from "firebase/firestore";
-import {db} from "./firebaseConfig";
+import { doc, collection, setDoc } from "firebase/firestore";
+import { db } from "./firebaseConfig";
+import { useNavigate } from "react-router-dom";
 
 const BookDetail = () => {
 
-    // Get the page's URL id
-    const id=new URLSearchParams(window.location.search).get('id');
+    const id=new URLSearchParams(window.location.search).get("id");
 
-    const emailL=sessionStorage.getItem('emailL');
-    const emailS=sessionStorage.getItem('emailS');
-    const email=emailL||emailS;// Get whichever email is found
+    const navigate = useNavigate();
 
-    const onSuccess=(data)=>{
-        console.log('Perform side effects after data fetching',data);
-    };
+    // Get logged-in user email from sessionStorage
+    const email = sessionStorage.getItem("emailL") || sessionStorage.getItem("emailS");
 
-    const onError=(error)=>{
-        console.log('Perform side effects after encountering error',error);
-    };
-
-    // Make a GET request to the API
-    const {isLoading,data,isError,error,isFetching,refetch}=useQuery(
-        'query1',
-        ()=>{return axios.get(`https://www.googleapis.com/books/v1/volumes/${id}`);},
+    // React Query: Fetch Book Data
+    const { isLoading, data, isError, error, isFetching, refetch } = useQuery(
+        "bookDetails", // Descriptive query key
+        () => axios.get(`https://www.googleapis.com/books/v1/volumes/${id}`), // Fetch function
         {
-            cacheTime:300000,
-            staleTime:0,
-            refetchOnMount:true,
-            refetchOnWindowFocus:true,
-            refetchInterval:false,
-            refetchIntervalInBackground:false,
-            enabled:true,
-            keepPreviousData:true,
-            onSuccess,
-            onError,
-            select:(data)=>{
-                return data.data;
-            },
+            cacheTime: 300000,
+            staleTime: 0,
+            refetchOnMount: true,
+            refetchOnWindowFocus: true,
+            refetchInterval: false,
+            enabled: true,
+            keepPreviousData: true,
+
+            onSuccess: (data) => {
+                console.log("Data fetched successfully:", data);
+                },
+            onError: (error) => {
+                console.error("Error fetching data:", error);
+                },
+            select: (response) => response.data, // Extract the main object
         },
     );
 
-    if (isLoading){
-        return <h1>Loading...</h1>
+
+    // Handle loading and error states
+    if (isLoading) {
+        return <h1>Loading...</h1>;
     }
 
-    if (isFetching){
-        return <h1>Fetching...</h1>
+    if (isError) {
+        return (
+            <div>
+                <h1>An error occurred while fetching book details.</h1>
+                <p>{error?.message || "Unknown error occurred. Please try again later."}</p>
+                <button onClick={() => navigate("/Home")}>Go Back</button>
+            </div>
+        );
     }
 
-    if (isError){
-        return <h1>{error.message}</h1>
+    if (isFetching) {
+        return <h1>Fetching...</h1>;
     }
 
-    // Get all the fields
-    const title=data?.volumeInfo.title;
-    const authors=data?.volumeInfo.authors || [];
-    const publishedDate=data?.volumeInfo.publishedDate;
-    const description=data?.volumeInfo.description;
-    const pageCount=data?.volumeInfo.pageCount;
-    const averageRating=data?.volumeInfo.averageRating;
-    const maturityRating=data?.volumeInfo.maturityRating
-    const imageLinks=data?.volumeInfo.imageLinks.thumbnail;
-    let epub;
-    if (data?.accessInfo.epub.isAvailable===true){
-        epub='Available';
-    }
-    else {
-        epub='Not Available';
-    }
+    // Destructure relevant fields from response
+    const {
+        title,
+        authors = [],
+        publishedDate,
+        description,
+        pageCount,
+        averageRating,
+        maturityRating,
+        imageLinks,
+        categories = [],
+    } = data?.volumeInfo || {};
 
-    // Add to the book to the subcollection books
-    const addToBooks=async ()=>{
+    const image = imageLinks?.thumbnail || "default-image-url.jpg"; // Fallback for missing images
+    const epub = data?.accessInfo.epub.isAvailable ? "Available" : "Not Available";
 
-        if (!email){
-            console.log('No email found');
+    // Add the book to the user's Firebase "books" subcollection
+    const addToBooks = async () => {
+        if (!email) {
+            window.alert("Please log in to your account to add books.");
+            return;
         }
 
         try {
-            // Reference to the user's "books" subcollection
-            const booksSubcollectionRef=collection(doc(db,'LibraryWebsite',email),'books');
+            // Reference to the user's books collection
+            const booksSubcollectionRef = collection(doc(db, "LibraryWebsite", email), "books");
 
-            // Create a document in the books subcollection with ID=id
-            await setDoc(doc(booksSubcollectionRef,id),{
-                title,
-                authors:authors || [],
-                }
-            );
-            console.log('Book added to the user\'s books');
-            window.alert('Book added to the user\'s books');
+            // Create a document in the subcollection with additional book fields
+            await setDoc(doc(booksSubcollectionRef, id), {
+                title: title || "N/A",
+                authors,
+                publishedDate: publishedDate || "Unknown",
+                description: description || "No description available",
+                pageCount: pageCount || 0,
+                averageRating: averageRating || "N/A",
+                maturityRating: maturityRating || "N/A",
+                categories,
+                epub,
+            });
+            console.log("Book added successfully to the user's library.");
+            window.alert("Book added to your library!");
+        } catch (error) {
+            console.error("Error adding book to user's library:", error);
+            window.alert("Failed to add book. Please try again.");
         }
-        catch (error){
-            console.log(error.message);
-        }
-    }
+    };
 
-    return(
-        <div id={'BookDetail'}>
-            <h1>{title}</h1>
-            <img src={imageLinks} alt={title}/>
-            {(data?.volumeInfo.authors ||[]).map((author, index)=>(
-                <h2 key={index}>{author}</h2>
-            ))}
-            <h3> Published date: {publishedDate}</h3>
-            <h2>Genre:</h2>
-            {(data?.volumeInfo.categories || []).map((author, index)=>(
-                <h2 key={index}>{author}</h2>
-            ))}
-            <h3>{description}</h3>
-            <h3>Maturity Rating: {maturityRating}</h3>
-            <h3> Pages: {pageCount}</h3>
-            <h3> Avg Rating: {averageRating}</h3>
-            <h3> Available: {epub}</h3>
-            <button onClick={refetch}>Refresh</button>
-            <button onClick={addToBooks}>Add to my books</button>
+    // JSX for rendering book details
+    return (
+        <div id="BookDetail" style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
+            <h1>{title || "No title available"}</h1>
+            <img
+                src={image}
+                alt={title || "Book cover"}
+            />
+            <div>
+                {authors.length > 0 ? (
+                    authors.map((author, index) => <h2 key={index}>{author}</h2>)
+                ) : (
+                    <h2>No authors found</h2>
+                )}
+            </div>
+            <h3>Published Date: {publishedDate || "Unknown"}</h3>
+            <h3>
+                Genre: {categories.length > 0 ? categories.join(", ") : "No genre information available"}
+            </h3>
+            <p>{description || "No description available for this book."}</p>
+            <h3>Maturity Rating: {maturityRating || "N/A"}</h3>
+            <h3>Pages: {pageCount || "N/A"}</h3>
+            <h3>Average Rating: {averageRating || "N/A"}</h3>
+            <h3>
+                Epub Availability:{" "}
+                <span style={{ color: epub === "Available" ? "green" : "red" }}>{epub}</span>
+            </h3>
+            <div style={{ marginTop: "20px" }}>
+                <button onClick={refetch}>
+                    Refresh
+                </button>
+                <button onClick={addToBooks} disabled={!email}>
+                    {email ? "Add to My Books" : "Log in to Add Books"}
+                </button>
+            </div>
         </div>
     );
 };
