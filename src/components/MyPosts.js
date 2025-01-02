@@ -156,7 +156,7 @@ const MyPosts = () => {
                 <h1>Title: {post.id}</h1>
                 <h2>Created at: {post.timestamp}</h2>
                 <Link
-                    to={`/Home/MyPostDetail`}
+                    to={`/Home/MyPostDetail?id=${post.id}`}
                     state={{ id: post.id }}
                     aria-label={`View details for post ${post.id}`}
                 >

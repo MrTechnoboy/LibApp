@@ -29,4 +29,29 @@
       @content;
     };
   };
+
+  @include mobile {
+    text-align: center;
+    border: 3px solid black;
+    background-color: bisque;
+    margin-top: 20px;
+    border-radius: 20px;
+    font-family: "Book Antiqua", serif;
+  };
+  @include laptop_small{
+    h1{
+      font-size: 50px;
+    };
+    p{
+      font-size: 40px;
+    };
+  };
+  @include fourK{
+    h1{
+      font-size: 70px;
+    };
+    p{
+      font-size: 60px;
+    };
+  };
 };
