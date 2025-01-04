@@ -1,0 +1,98 @@
+@media (min-width: 320px) {
+  #BookDetail {
+    margin-top: 20px;
+    text-align: center;
+    border: 3px solid black;
+    border-radius: 20px;
+    background-color: bisque;
+    font-family: "Book Antiqua", serif;
+  }
+  #BookDetail img {
+    border: 3px solid saddlebrown;
+  }
+  #BookDetail button {
+    display: block;
+    margin: 0 auto 10px;
+    font-weight: bolder;
+    border: 2px solid saddlebrown;
+    background-color: bisque;
+    border-radius: 20px;
+    cursor: pointer;
+    padding: 10px;
+  }
+  #BookDetail button:hover {
+    background-color: saddlebrown;
+    color: bisque;
+  }
+  #BookDetail button:active {
+    background-color: bisque;
+    color: #1f1d1d;
+  }
+}
+@media (min-width: 597px) {
+  #BookDetail h1 {
+    font-size: 40px;
+  }
+  #BookDetail img {
+    width: 25%;
+  }
+  #BookDetail h2 {
+    font-size: 30px;
+  }
+  #BookDetail h3 {
+    font-size: 20px;
+  }
+}
+@media (min-width: 769px) {
+  #BookDetail h1 {
+    font-size: 50px;
+  }
+  #BookDetail img {
+    width: 35%;
+  }
+  #BookDetail h2 {
+    font-size: 40px;
+  }
+  #BookDetail h3 {
+    font-size: 30px;
+  }
+  #BookDetail p {
+    font-size: 20px;
+  }
+  #BookDetail button {
+    font-size: 20px;
+  }
+}
+@media (min-width: 1025px) {
+  #BookDetail h1 {
+    font-size: 60px;
+  }
+  #BookDetail img {
+    width: 35%;
+  }
+  #BookDetail h2 {
+    font-size: 50px;
+  }
+}
+@media (min-width: 1441px) {
+  #BookDetail h1 {
+    font-size: 80px;
+  }
+  #BookDetail h2 {
+    font-size: 70px;
+  }
+  #BookDetail h3 {
+    font-size: 60px;
+  }
+  #BookDetail p {
+    font-size: 50px;
+  }
+  #BookDetail button {
+    font-size: 40px;
+  }
+  #BookDetail img {
+    width: 35%;
+  }
+}
+
+/*# sourceMappingURL=BookDetail.css.map */

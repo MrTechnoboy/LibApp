@@ -1,0 +1,45 @@
+@media (min-width: 320px) {
+  #Home #Home-header {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-evenly;
+    border: 3px solid black;
+    border-radius: 20px;
+    padding: 20px;
+    background-color: bisque;
+  }
+  #Home #Home-header a {
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+    border: 1px solid saddlebrown;
+    padding: 3px;
+    border-radius: 20px;
+  }
+  #Home #Home-header a:hover {
+    background-color: saddlebrown;
+    color: white;
+  }
+  #Home #Home-header a:active {
+    background-color: bisque;
+    border-color: saddlebrown;
+  }
+}
+@media (min-width: 597px) {
+  #Home #Home-header a {
+    font-size: 25px;
+    border-width: 3px;
+  }
+}
+@media (min-width: 1025px) {
+  #Home #Home-header a {
+    font-size: 35px;
+  }
+}
+@media (min-width: 1441px) {
+  #Home #Home-header a {
+    font-size: 85px;
+  }
+}
+
+/*# sourceMappingURL=Home.css.map */

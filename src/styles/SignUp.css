@@ -1,0 +1,80 @@
+@media (min-width: 320px) {
+  #SignUp {
+    text-align: center;
+    display: grid;
+    place-items: center;
+    border: 5px solid saddlebrown;
+    border-radius: 20px;
+    font-family: Arial, sans-serif;
+    background-color: bisque;
+  }
+  #SignUp input {
+    display: block;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  #SignUp button {
+    padding: 10px;
+    border: 3px solid black;
+    border-radius: 10px;
+    font-weight: bolder;
+    cursor: pointer;
+    margin-bottom: 20px;
+  }
+  #SignUp button:hover {
+    background-color: saddlebrown;
+    color: white;
+  }
+  #SignUp button:active {
+    background-color: white;
+    color: black;
+  }
+}
+@media (min-width: 769px) {
+  #SignUp {
+    border: 10px solid saddlebrown;
+  }
+  #SignUp h1 {
+    font-size: 80px;
+  }
+  #SignUp h2 {
+    font-size: 50px;
+  }
+  #SignUp input {
+    font-size: 30px;
+  }
+  #SignUp button {
+    font-size: 30px;
+  }
+}
+@media (min-width: 1440px) {
+  #SignUp h1 {
+    font-size: 100px;
+  }
+  #SignUp h2 {
+    font-size: 70px;
+  }
+  #SignUp input {
+    font-size: 60px;
+  }
+  #SignUp button {
+    font-size: 40px;
+  }
+}
+@media (min-width: 2001px) {
+  #SignUp h1 {
+    font-size: 130px;
+  }
+  #SignUp h2 {
+    font-size: 100px;
+  }
+  #SignUp button {
+    font-size: 60px;
+  }
+}
+
+/*# sourceMappingURL=SignUp.css.map */

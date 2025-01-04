@@ -1,0 +1,72 @@
+@media (min-width: 320px) {
+  #CreatePost {
+    text-align: center;
+    border: 3px solid black;
+    background-color: bisque;
+    border-radius: 20px;
+    margin-top: 30px;
+  }
+  #CreatePost input {
+    display: block;
+    margin: 0 auto 0;
+    font-size: 15px;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+  }
+  #CreatePost label {
+    display: block;
+    margin-top: 40px;
+  }
+  #CreatePost textarea {
+    display: block;
+    margin: 0 auto 0;
+    border: 2px solid black;
+    border-radius: 10px;
+    text-align: center;
+    width: 80%;
+    height: 200px;
+  }
+  #CreatePost button {
+    display: block;
+    margin: 20px auto;
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    font-weight: bolder;
+    background-color: saddlebrown;
+    color: bisque;
+  }
+}
+@media (min-width: 1025px) {
+  #CreatePost h1 {
+    font-size: 60px;
+  }
+  #CreatePost label {
+    font-size: 40px;
+  }
+  #CreatePost input {
+    font-size: 30px;
+  }
+  #CreatePost textarea {
+    font-size: 40px;
+    height: 300px;
+  }
+  #CreatePost button {
+    font-size: 40px;
+  }
+}
+@media (min-width: 1441px) {
+  #CreatePost h1 {
+    font-size: 80px;
+  }
+  #CreatePost label {
+    font-size: 60px;
+  }
+  #CreatePost input {
+    font-size: 50px;
+  }
+}
+
+/*# sourceMappingURL=CreatePost.css.map */

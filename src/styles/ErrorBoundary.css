@@ -1,0 +1,80 @@
+@media (min-width: 320px) {
+  #ErrorBoundary {
+    display: grid;
+    place-items: center;
+    text-align: center;
+    border: 3px solid saddlebrown;
+    border-radius: 20px;
+    font-family: "Book Antiqua", serif;
+    background-color: bisque;
+  }
+  #ErrorBoundary h2 {
+    text-align: center;
+  }
+  #ErrorBoundary button {
+    margin-bottom: 10px;
+    border: 2px solid saddlebrown;
+    border-radius: 20px;
+    font-weight: bolder;
+    cursor: pointer;
+  }
+  #ErrorBoundary button:hover {
+    background-color: saddlebrown;
+    color: white;
+    border-color: white;
+  }
+  #ErrorBoundary button:active {
+    background-color: white;
+    color: black;
+    border-color: saddlebrown;
+  }
+}
+@media (min-width: 597px) {
+  #ErrorBoundary h1 {
+    font-size: 40px;
+  }
+  #ErrorBoundary h2 {
+    font-size: 30px;
+  }
+  #ErrorBoundary button {
+    padding: 10px;
+    font-size: 15px;
+  }
+}
+@media (min-width: 769px) {
+  #ErrorBoundary h1 {
+    font-size: 80px;
+  }
+  #ErrorBoundary h2 {
+    font-size: 50px;
+  }
+  #ErrorBoundary button {
+    padding: 30px;
+    font-size: 30px;
+    border: 5px solid saddlebrown;
+  }
+}
+@media (min-width: 1440px) {
+  #ErrorBoundary h1 {
+    font-size: 100px;
+  }
+  #ErrorBoundary h2 {
+    font-size: 70px;
+  }
+  #ErrorBoundary button {
+    padding: 30px;
+  }
+}
+@media (min-width: 2001px) {
+  #ErrorBoundary h1 {
+    font-size: 130px;
+  }
+  #ErrorBoundary h2 {
+    font-size: 100px;
+  }
+  #ErrorBoundary button {
+    font-size: 40px;
+  }
+}
+
+/*# sourceMappingURL=ErrorBoundary.css.map */

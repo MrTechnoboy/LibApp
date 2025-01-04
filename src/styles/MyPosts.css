@@ -1,0 +1,90 @@
+@media (min-width: 320px) {
+  #MyPosts {
+    text-align: center;
+    border: 5px solid black;
+    margin-top: 20px;
+    border-radius: 20px;
+  }
+  #MyPosts form {
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  #MyPosts form input {
+    padding: 10px;
+    border: 2px solid black;
+    background-color: bisque;
+    border-radius: 20px;
+    text-align: center;
+  }
+  #MyPosts div {
+    border-top: 5px solid black;
+    border-bottom: 5px solid black;
+    background-color: bisque;
+    cursor: pointer;
+  }
+  #MyPosts div a {
+    text-decoration: none;
+  }
+  #MyPosts div:hover {
+    background-color: saddlebrown;
+    color: bisque;
+  }
+  #MyPosts div:hover a {
+    color: bisque;
+  }
+  #MyPosts button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 20px;
+    background-color: bisque;
+    font-weight: bolder;
+    cursor: pointer;
+  }
+  #MyPosts button:hover {
+    background-color: saddlebrown;
+    color: bisque;
+  }
+  #MyPosts button:active {
+    background-color: bisque;
+    color: black;
+  }
+}
+@media (min-width: 769px) {
+  #MyPosts form input {
+    font-size: 20px;
+  }
+  #MyPosts button {
+    font-size: 20px;
+  }
+}
+#MyPosts div h1 {
+  font-size: 40px;
+}
+#MyPosts div h2 {
+  font-size: 30px;
+}
+#MyPosts div a {
+  font-size: 20px;
+}
+@media (min-width: 1440px) {
+  #MyPosts form input {
+    font-size: 40px;
+    border: 5px solid black;
+  }
+  #MyPosts div h1 {
+    font-size: 70px;
+  }
+  #MyPosts div h2 {
+    font-size: 60px;
+  }
+  #MyPosts div a {
+    font-size: 50px;
+  }
+  #MyPosts button {
+    font-size: 40px;
+  }
+}
+
+/*# sourceMappingURL=MyPosts.css.map */

@@ -1,0 +1,58 @@
+@media (min-width: 320px) {
+  #P1 {
+    border: 3px solid saddlebrown;
+    border-radius: 20px;
+    background-color: bisque;
+    text-align: center;
+    color: #1f1d1d;
+    font-family: "Arial Black", cursive;
+  }
+  #P1 a {
+    color: darkmagenta;
+    font-style: italic;
+  }
+}
+@media (min-width: 426px) {
+  #P1 {
+    border: 5px solid saddlebrown;
+  }
+  #P1 h1 {
+    font-size: 50px;
+  }
+  #P1 h2 {
+    font-size: 30px;
+  }
+  #P1 a {
+    font-size: 20px;
+  }
+}
+@media (min-width: 769px) {
+  #P1 {
+    border: 10px solid saddlebrown;
+  }
+  #P1 h1 {
+    font-size: 70px;
+  }
+  #P1 h2 {
+    font-size: 30px;
+  }
+  #P1 a {
+    font-size: 30px;
+  }
+}
+@media (min-width: 1440px) {
+  #P1 {
+    border: 15px solid saddlebrown;
+  }
+  #P1 h1 {
+    font-size: 100px;
+  }
+  #P1 h2 {
+    font-size: 70px;
+  }
+  #P1 a {
+    font-size: 30px;
+  }
+}
+
+/*# sourceMappingURL=P1.css.map */

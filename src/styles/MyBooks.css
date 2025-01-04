@@ -1,0 +1,104 @@
+@media (min-width: 320px) {
+  #MyBooks {
+    text-align: center;
+  }
+  #MyBooks button {
+    margin-top: 20px;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 2px solid black;
+    border-radius: 20px;
+    background-color: bisque;
+    font-weight: bolder;
+    cursor: pointer;
+  }
+  #MyBooks button:hover {
+    background-color: saddlebrown;
+    color: bisque;
+  }
+  #MyBooks button:active {
+    background-color: bisque;
+    color: black;
+  }
+  #MyBooks form {
+    text-align: center;
+    margin-top: 10px;
+  }
+  #MyBooks form input {
+    height: 20px;
+    border: 2px solid black;
+    border-radius: 20px;
+    background-color: bisque;
+    text-align: center;
+  }
+  #MyBooks #MyBooksList {
+    margin-top: 20px;
+    border: 5px solid #100d0d;
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    place-items: center;
+  }
+  #MyBooks #MyBooksList div {
+    font-weight: bolder;
+    text-align: center;
+    margin-top: 20px;
+    border: 5px solid #100d0d;
+    border-radius: 20px;
+    padding: 20px;
+    background-color: bisque;
+    cursor: pointer;
+  }
+  #MyBooks #MyBooksList div a {
+    text-decoration: none;
+  }
+  #MyBooks #MyBooksList div:hover {
+    background-color: saddlebrown;
+    color: bisque;
+  }
+  #MyBooks #MyBooksList div:hover a {
+    color: bisque;
+  }
+}
+@media (min-width: 426px) {
+  #MyBooks form input {
+    height: 30px;
+  }
+}
+@media (min-width: 769px) {
+  #MyBooks button {
+    font-size: 20px;
+  }
+  #MyBooks form input {
+    font-size: 30px;
+    padding: 20px;
+    border: 3px solid black;
+  }
+  #MyBooks #MyBooksList div {
+    font-size: 30px;
+  }
+}
+@media (min-width: 1440px) {
+  #MyBooks button {
+    font-size: 40px;
+  }
+  #MyBooks form {
+    margin-top: 30px;
+  }
+  #MyBooks form input {
+    font-size: 60px;
+    height: 50px;
+  }
+  #MyBooks #MyBooksList {
+    border: 6px solid black;
+  }
+  #MyBooks #MyBooksList div {
+    font-size: 50px;
+    border: 6px solid black;
+    margin-top: 30px;
+  }
+}
+
+/*# sourceMappingURL=MyBooks.css.map */
