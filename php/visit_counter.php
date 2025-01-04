@@ -1,7 +1,7 @@
 <?php
 // Handle preflight requests for CORS (if any)
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
-    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Allow-Origin: https://applib.free.nf");
     header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
     header("Access-Control-Allow-Headers: Content-Type");
     http_response_code(204); // No Content
@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 }
 
 // Enable CORS for all origins (you can restrict this later if needed)
-header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: https://applib.free.nf");
 header("Access-Control-Allow-Methods: GET, POST");
 header("Access-Control-Allow-Headers: Content-Type");
 header("Content-Type: application/json");
